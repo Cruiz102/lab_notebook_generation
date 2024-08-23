@@ -1,6 +1,7 @@
 import requests
 from typing import Dict, List, Tuple
 import re
+from datetime import datetime
 
 class GithubCommitResponse:
     def __init__(self, message: str, committed_date: str, sha: str, author_name: str, author_email: str, url: str, diffs: List[Dict[str, str]]):
@@ -46,7 +47,7 @@ class GithubClient:
         self.base_url = "https://api.github.com"
         self.token = token
 
-    def get_commits_and_diffs(self, gh_repo_url: str, branch: str, num_commits: int) -> List[GithubCommitResponse]:
+    def get_commits_and_diffs(self, gh_repo_url: str, branch: str, num_commits: int = None, date_start: str = None, date_end: str = None) -> List[GithubCommitResponse]:
         # Extract owner and repository name using regex
         owner, repo_name = self.extract_owner_repo(gh_repo_url)
 
@@ -54,11 +55,17 @@ class GithubClient:
         url = f"{self.base_url}/repos/{owner}/{repo_name}/commits"
         params = {
             "sha": branch,
-            "per_page": num_commits
+            "per_page": num_commits if num_commits else 100,  # Max per page is 100
         }
 
         # Execute the request to get commits
         response = self.run_rest_request(url, params)
+
+        # Filter by date range if num_commits is not specified
+        if not num_commits and date_start and date_end:
+            date_start_dt = datetime.strptime(date_start, "%Y-%m-%d")
+            date_end_dt = datetime.strptime(date_end, "%Y-%m-%d")
+            response = [commit for commit in response if date_start_dt <= datetime.strptime(commit['commit']['committer']['date'], "%Y-%m-%dT%H:%M:%SZ") <= date_end_dt]
 
         # Fetch diffs for each commit
         diffs = {}
@@ -129,10 +136,16 @@ class GithubClient:
 
 
 if __name__ == "__main__":
-    client = GithubClient(token="")
+    import os
+    gh = os.environ['GH_KEY']
+    client = GithubClient(token=gh)
 
     # Example of getting commits with diffs
-    commits_with_diffs = client.get_commits_and_diffs("https://github.com/Cruiz102/chat-api", "main", 3)
+    commits_with_diffs = client.get_commits_and_diffs(
+        "https://github.com/Cruiz102/chat-api", 
+        "main", 
+        num_commits=2
+    )
     for commit in commits_with_diffs:
         print(commit)
         print("\n")
