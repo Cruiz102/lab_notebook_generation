@@ -30,7 +30,7 @@ jobs:
 
     - name: Run notebook generation
       run: |
-        python generate_notebook.py --repo_url "https://github.com/your_repo" \
+        python generate_notebook.py --repo_url "https://github.com/Cruiz102/MASK_ML" \
                                     --branch "main" \
                                     --commits 10 \
                                     --reference_file_path "data/references.txt" \
