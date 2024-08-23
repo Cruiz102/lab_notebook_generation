@@ -34,7 +34,7 @@ jobs:
                                     --branch "main" \
                                     --commits 10 \
                                     --reference_file_path "data/references.txt" \
-                                    --metadata_file_path "references/metadata.txt" \
+                                    --metadata_file_path "data/metadata.txt" \
                                     --checker_iterations 2 \
                                     --output_folder "weekly_notebook_iterations"
       env:
