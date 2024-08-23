@@ -45,8 +45,8 @@ def main():
     parser.add_argument("--repo_url", type=str, required=True, help="GitHub repository URL")
     parser.add_argument("--branch", type=str, required=True, help="Branch name")
     parser.add_argument("--commits", type=int, help="Number of commits to fetch", default=None)
-    parser.add_argument("--date_start", type=str, required=True, help="Start date in YYYY-MM-DD format")
-    parser.add_argument("--date_end", type=str, required=True, help="End date in YYYY-MM-DD format")
+    parser.add_argument("--date_start", type=str, help="Start date in YYYY-MM-DD format", default=None)
+    parser.add_argument("--date_end", type=str, help="End date in YYYY-MM-DD format", default=None)
     parser.add_argument("--reference_file_path", type=str, required=True, help="Path to the text file containing reference links")
     parser.add_argument("--metadata_file_path", type=str, required=True, help="Path to the metadata notes file")
     parser.add_argument("--checker_iterations", type=int, default=1, help="Number of checker iterations")
@@ -58,6 +58,10 @@ def main():
     gh_token = args.gh_token or os.getenv("GITHUB_TOKEN")
     if not gh_token:
         raise ValueError("GitHub token must be provided either via --gh_token or GITHUB_TOKEN environment variable.")
+    
+    # Check if either commits or a valid date range is provided
+    if not args.commits and (not args.date_start or not args.date_end):
+        raise ValueError("You must provide either the number of commits (--commits) or a valid date range (--date_start and --date_end).")
     
     # Load and validate reference links
     reference_links = load_reference_links(args.reference_file_path)

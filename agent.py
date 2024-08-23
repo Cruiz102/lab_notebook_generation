@@ -5,7 +5,7 @@ from typing import Dict, Optional
 import datetime
 from bs4 import BeautifulSoup
 import requests
-
+import logging
 class UndefinedVariableError(Exception):
     pass
 
@@ -57,7 +57,7 @@ def openai_chat_completion(prompt: Prompt) -> str:
     model="gpt-4o-mini",
         messages=[{"role": "user", "content": prompt_text}]
     )
-    return response['choices'][0]['message']['content']
+    return response.choices[0].message.content
 
 
 def general_instruction_prompt() -> Prompt:
@@ -98,10 +98,10 @@ def general_instruction_prompt() -> Prompt:
     
         (Agent_Generations)
     
-
-
-    
+        All that data will be below:
 """
+    return  Prompt(instructions)
+    
 
 def github_data_prompt(gh_token: str, repo_url: str, branch: str, commits: Optional[int], date_start: Optional[str], date_end: Optional[str]) -> Prompt:
     instructions = """
