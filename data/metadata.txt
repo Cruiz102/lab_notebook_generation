@@ -1,0 +1,4 @@
+This week I work implementing the rotation embeddings, mask decoder and hydra configuratins
+
+Learn about a new tecnique called hypernetworks  nad the theoretical foundations  of relative embeddings in transformers
+and how they can be used.
