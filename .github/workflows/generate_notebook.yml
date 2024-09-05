@@ -33,7 +33,6 @@ jobs:
       run: |
         python generate_notebook.py --repo_url "https://github.com/Cruiz102/MASK_ML" \
                                     --branch "main" \
-                                    --commits 10 \
                                     --reference_file_path "data/references.txt" \
                                     --metadata_file_path "data/metadata.txt" \
                                     --checker_iterations 2 \
